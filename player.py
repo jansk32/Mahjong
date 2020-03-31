@@ -5,6 +5,7 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.pos = None
+        self.played = []
         self.cards = []
         self.currCard = None
 
@@ -48,14 +49,16 @@ class Player:
 
     # Print hand
     def print_hand(self):
-        for i in self.cards:
+        for i in self.getCards():
             try:
                 print(i.toString(), end=", ")
             except:
                 print("No pieces")
                 break
         print()
-    # Update call
+    # Update call should return thrown card
     def update(self, drawnCard):
         print(self.name, "picked up", drawnCard.toString())
+        self.draw(drawnCard)
         self.print_hand()
+        print(len(self.cards),end="\n\n")

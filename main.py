@@ -2,13 +2,11 @@ from board import Board
 
 def main():
     board = Board()
+    p1 = board.addPlayer("John")
+    p2 = board.addPlayer("Kevin")
+    board.initial_drawing()
+    board.update()
 
-
-
-def print_pieces(arr):
-    for i in arr:
-        print(i.toString(), end=" ")
-    print()
 
 
 if __name__ == "__main__":
