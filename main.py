@@ -1,10 +1,13 @@
 from constants.valConst import *
-from piece import Piece
+from Pieces.dragon import Dragon
+from Pieces.wind import Wind
+from Pieces.normal import Normal
+from Pieces.flower import Flower
 
 def main():
-    print("Hello")
     pArr = initialise_pieces()
     print_pieces(pArr)
+    print(len(pArr))
 
 def initialise_pieces():
     mahPieces = []
@@ -12,16 +15,26 @@ def initialise_pieces():
     # Suites BAMBOO, DOTS and HORSE
     for i in range(4):
         for i in valCounts:
-            mahPieces.append(Piece(i, Suite.HORSE, False))
-            mahPieces.append(Piece(i, Suite.BAMBOO, False))
-            mahPieces.append(Piece(i, Suite.DOTS, False))
+            mahPieces.append(Normal(i, Suite.BAMBOO))
+            mahPieces.append(Normal(i, Suite.DOTS))
+            mahPieces.append(Normal(i, Suite.HORSE))
 
-    return sorted(mahPieces, key=lambda x: x.getSuite().name)
+        for drag in dragon:
+                mahPieces.append(Dragon(drag))
+
+        for w in wind:
+                mahPieces.append(Wind(w))
+        
+    for pos in flower:
+        mahPieces.append(Flower(pos, Suite.FLOWER))
+        mahPieces.append(Flower(pos, Suite.FLOWER))
+
+    return sorted(mahPieces, key=lambda x: x.getTypes().name)
 
 def print_pieces(arr):
     for i in arr:
         print(i.toString(), end=" ")
-        print()
+    print()
 
 
 if __name__ == "__main__":

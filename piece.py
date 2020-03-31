@@ -2,19 +2,14 @@ from constants.valConst import Suite
 
 class Piece:
 
-    def __init__(self, number, suite, isNorm):
-        self.number = number # value or points
-        self.suite = suite
-        self.isNorm = isNorm
+    def __init__(self, types):
+        self.types = types
 
-    def getNumber(self):
-        return self.number
-    
-    def getSuite(self):
-        return self.suite
-    
-    def getNorm(self):
-        return self.isNorm
+    def getTypes(self):
+        return self.types
+
+    def comparerTo(self,p):
+        pass
 
     def toString(self):
-        return (self.number, self.suite.name)
+        pass
