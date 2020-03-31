@@ -3,11 +3,15 @@ from Pieces.dragon import Dragon
 from Pieces.wind import Wind
 from Pieces.normal import Normal
 from Pieces.flower import Flower
+from player import Player
 
 def main():
     pArr = initialise_pieces()
     print_pieces(pArr)
-    print(len(pArr))
+    p1 = Player("John")
+    p1hand = pArr[4:18].copy()
+    p1.setCards(p1hand)
+    p1.update(pArr[-1])
 
 def initialise_pieces():
     mahPieces = []

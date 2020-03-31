@@ -4,7 +4,7 @@ class Player:
 
     def __init__(self, name):
         self.name = name
-        self.pos = pos
+        self.pos = None
         self.cards = []
         self.currCard = None
 
@@ -54,8 +54,8 @@ class Player:
             except:
                 print("No pieces")
                 break
-    
+        print()
     # Update call
     def update(self, drawnCard):
-        print(self.name, "picked up", drawnCard.toString)
+        print(self.name, "picked up", drawnCard.toString())
         self.print_hand()
