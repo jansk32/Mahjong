@@ -26,17 +26,29 @@ class Player:
     
     # Command line
     def command(self):
-        cmd_str = input("Trial: ").split()
-        if len(cmd_str) == 1:
-            print(self.name, "will", cmd_str[0])
-            return int(cmd_str[0])
-        elif len(cmd_str) == 2:
-            cmd, ind = cmd_str
-            print(self.name, cmd, ind)
-            return int(ind)
-        else:
-            return 0
-
+        result = ""
+        while not result.isdigit():
+            cmd_str = input("Trial: ").lower().split()
+            if len(cmd_str) == 1:
+                # arrange, call (zhimo and gong), game
+                if cmd_str[0] in ["arrange", "sort"]:
+                    print("sorting row")
+                    self.sort_hand()
+                    self.print_hand()
+                ## Need to think of strategy for calling
+                elif cmd_str[0].isdigit():
+                    print(self.name, "will", cmd_str[0])
+                    result = cmd_str[0]
+            elif len(cmd_str) == 2 and cmd_str[1].isdigit() and \
+                "throw" in cmd_str[0]:
+                # throw (ind number)
+                cmd, ind = cmd_str
+                print(self.name, cmd, ind)
+                result = ind
+            else:
+                print("Invalid Move. Try again")
+        return int(result)
+    
     # Draw a card
     def draw(self, cardAdd):
         self.cards.append(cardAdd)
@@ -64,6 +76,12 @@ class Player:
                 print("No pieces")
                 break
         print()
+    
+    # Sorting hand
+    def sort_hand(self):
+        newHand = sorted(self.cards, key=lambda x: x.getTypes().value)
+        self.setCards(newHand)
+
     # Update call should return thrown card
     def update(self, drawnCard):
         print(self.name, "picked up", drawnCard.toString())

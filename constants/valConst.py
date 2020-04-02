@@ -20,7 +20,8 @@ class Suite(Enum):
 
     # FLOWER
     FLOWER = 11
-
+    
+    
 valCounts = [1,2,3,4,5,6,7,8,9]
 wind = [Suite.WEST,Suite.EAST,Suite.NORTH,Suite.SOUTH]
 dragon = [Suite.GREEN,Suite.RED,Suite.WINDOW]
