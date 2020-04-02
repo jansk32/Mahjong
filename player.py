@@ -35,7 +35,7 @@ class Player:
     
     # Throw out a card
     def throwOut(self, ind):
-        cardThrown = self.pop(ind)
+        cardThrown = self.cards.pop(ind)
         return cardThrown
     
     # To make a call
@@ -61,4 +61,7 @@ class Player:
         print(self.name, "picked up", drawnCard.toString())
         self.draw(drawnCard)
         self.print_hand()
-        print(len(self.cards),end="\n\n")
+        print(len(self.cards),end="\n")
+        tmpInd = len(self.cards) -1 ## FIX THIS
+        print(self.name, "threw out", self.cards[tmpInd].toString())
+        return self.throwOut(tmpInd)

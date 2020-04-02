@@ -30,7 +30,9 @@ class Board:
     # Update players
     def update(self):
         gvn = self.drawCard()
-        self.players[0].update(gvn)
+        t = self.players[0].update(gvn)
+        self.discard.append(t)
+
         #for i in self.players:
         #    gvn = self.drawCard()
         #    i.update(gvn)
@@ -47,7 +49,7 @@ class Board:
                 self.initial_four_player(i)
         for last in self.players:
             c = self.drawCard()
-            last.update(c)
+            last.draw(c)
     
 # Initialise number of cards
 def initialise_pieces():
