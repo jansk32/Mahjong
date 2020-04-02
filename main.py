@@ -4,6 +4,7 @@ def main():
     board = Board()
     p1 = board.addPlayer("John")
     p2 = board.addPlayer("Kevin")
+    #a,b = input("trial: ").split()
     board.initial_drawing()
     board.update()
     print("Number of cards in pile:",len(board.cards))

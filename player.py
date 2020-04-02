@@ -24,10 +24,18 @@ class Player:
     def setPos(self,pos):
         self.pos = pos
     
-    # Choose a card
-    def chooseCard(self, ind):
-        self.currCard = self.cards[ind]
-        return ind
+    # Command line
+    def command(self):
+        cmd_str = input("Trial: ").split()
+        if len(cmd_str) == 1:
+            print(self.name, "will", cmd_str[0])
+            return int(cmd_str[0])
+        elif len(cmd_str) == 2:
+            cmd, ind = cmd_str
+            print(self.name, cmd, ind)
+            return int(ind)
+        else:
+            return 0
 
     # Draw a card
     def draw(self, cardAdd):
@@ -62,6 +70,7 @@ class Player:
         self.draw(drawnCard)
         self.print_hand()
         print(len(self.cards),end="\n")
-        tmpInd = len(self.cards) -1 ## FIX THIS
+        tmpInd = self.command()
+        # tmpInd = input("Select a card(index): ")
         print(self.name, "threw out", self.cards[tmpInd].toString())
         return self.throwOut(tmpInd)

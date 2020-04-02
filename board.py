@@ -27,7 +27,7 @@ class Board:
             tmpPlayer.draw(c)
 
 
-    # Update players
+    # Update players, which return a thrown piece
     def update(self):
         gvn = self.drawCard()
         t = self.players[0].update(gvn)
