@@ -51,7 +51,9 @@ class Player:
     
     # Draw a card
     def draw(self, cardAdd):
-        self.cards.append(cardAdd)
+        newCards = list(self.cards)
+        newCards.append(cardAdd)
+        self.setCards(newCards)
     
     # Throw out a card
     def throwOut(self, ind):
@@ -70,17 +72,19 @@ class Player:
     # Print hand
     def print_hand(self):
         for i in self.getCards():
-            try:
-                print(i.toString(), end=", ")
-            except:
-                print("No pieces")
-                break
+            print(i.toString(), end=", ")
         print()
     
     # Sorting hand
     def sort_hand(self):
         newHand = sorted(self.cards, key=lambda x: x.getTypes().value)
+        valCards = [x for x in newHand if x.getTypes().value < 4]
+        valCards = sorted(valCards,key=lambda x : (x.getTypes().value, x.getVal()))
+        newHand = valCards + newHand[len(valCards):]
+        print(len(valCards), len(newHand))
         self.setCards(newHand)
+
+
 
     # Update call should return thrown card
     def update(self, drawnCard):
