@@ -1,4 +1,5 @@
 from piece import Piece
+from constants.calls import call
 
 class Player:
 
@@ -32,12 +33,36 @@ class Player:
             if len(cmd_str) == 1:
                 # arrange, call (zhimo and gong), game
                 if cmd_str[0] in ["arrange", "sort"]:
-                    print("sorting row")
                     self.sort_hand()
                     self.print_hand()
                 ## Need to think of strategy for calling
-                elif cmd_str[0].isdigit():
-                    print(self.name, "will", cmd_str[0])
+
+                # Call gong
+                elif cmd_str[0] == call["gong"] or cmd_str[0] == "gong":
+                    print(self.name, "will GONG!")
+
+                    # Select pieces to GONG
+                    arr = input("Select pieces (4): ").split()
+                    arr = [int(x) for x in arr]
+
+                    # Make sure all pieces have same type
+                    if len({g.getTypes().value for g in arr}) == 1:
+                        tmpHand = list(self.cards)
+                        # if they are normal cards, vals have to be the same too
+                        try:
+                            if len({n.getVal() for n in arr}) == 1:
+                                for playInd in arr:
+                                    c = tmpHand.pop(playInd)
+                                    self.played.append(c)
+                        # if they dont have getVal function 
+                        except:
+                            for playInd in arr:
+                                c = tmpHand.pop(playInd)
+                                self.played.append(c)
+
+                        
+                        
+                        
                     result = cmd_str[0]
             elif len(cmd_str) == 2 and cmd_str[1].isdigit() and \
                 "throw" in cmd_str[0]:
@@ -81,7 +106,6 @@ class Player:
         valCards = [x for x in newHand if x.getTypes().value < 4]
         valCards = sorted(valCards,key=lambda x : (x.getTypes().value, x.getVal()))
         newHand = valCards + newHand[len(valCards):]
-        print(len(valCards), len(newHand))
         self.setCards(newHand)
 
 
