@@ -44,13 +44,13 @@ class Player:
                     # Select pieces to GONG
                     arr = input("Select pieces (4): ").split()
                     arr = [int(x) for x in arr]
-
+                    checkArr = [self.cards[i] for i in arr]
                     # Make sure all pieces have same type
-                    if len({g.getTypes().value for g in arr}) == 1:
+                    if len({g.getTypes().value for g in checkArr}) == 1:
                         tmpHand = list(self.cards)
                         # if they are normal cards, vals have to be the same too
                         try:
-                            if len({n.getVal() for n in arr}) == 1:
+                            if len({n.getVal() for n in checkArr}) == 1:
                                 for playInd in arr:
                                     c = tmpHand.pop(playInd)
                                     self.played.append(c)
@@ -60,9 +60,6 @@ class Player:
                                 c = tmpHand.pop(playInd)
                                 self.played.append(c)
 
-                        
-                        
-                        
                     result = cmd_str[0]
             elif len(cmd_str) == 2 and cmd_str[1].isdigit() and \
                 "throw" in cmd_str[0]:
