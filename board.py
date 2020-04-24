@@ -50,7 +50,32 @@ class Board:
         for last in self.players:
             c = self.drawCard()
             last.draw(c)
+        
+    # Set order of pos
+    def setOrder(self):
+        # Assume check who has pos
+        dice = random.randrange(3,18)
+        if self.checkPosNone() == -1:
+            print(self.players[0].name, "rolled the die and got", dice)
+            # Can just reorder the self.player list
+        return dice
     
+    # Set flower deck
+    def flowerDeck(self, dieNum):
+        flowerPile = self.cards[:dieNum].copy
+        self.cards = self.cards[dieNum:]
+        return flowerPile
+        
+
+
+    #check if all people have pos NONE
+    def checkPosNone(self):
+        for p in range(len(self.players)):
+            ## Find the first 
+            if self.players[p].getPos() == 0:
+                return p
+        return -1
+
 # Initialise number of cards
 def initialise_pieces():
     mahPieces = []

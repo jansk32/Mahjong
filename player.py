@@ -59,8 +59,8 @@ class Player:
                             for playInd in arr:
                                 c = tmpHand.pop(playInd)
                                 self.played.append(c)
-
                     result = cmd_str[0]
+                    
             elif len(cmd_str) == 2 and cmd_str[1].isdigit() and \
                 "throw" in cmd_str[0]:
                 # throw (ind number)

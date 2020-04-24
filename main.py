@@ -6,6 +6,8 @@ def main():
     p2 = board.addPlayer("Kevin")
     #a,b = input("trial: ").split()
     board.initial_drawing()
+    dice = board.setOrder()
+    board.flowerDeck(dice)
     board.update()
     print("Number of cards in pile:",len(board.cards))
     print("Number of cards in discard:", len(board.discard))
