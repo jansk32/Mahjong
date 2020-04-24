@@ -1,4 +1,5 @@
 from piece import Piece
+from Pieces.flower import Flower
 from constants.calls import call
 
 class Player:
@@ -60,7 +61,7 @@ class Player:
                                 c = tmpHand.pop(playInd)
                                 self.played.append(c)
                     result = cmd_str[0]
-                    
+
             elif len(cmd_str) == 2 and cmd_str[1].isdigit() and \
                 "throw" in cmd_str[0]:
                 # throw (ind number)
@@ -90,6 +91,17 @@ class Player:
             return calling
         else:
             return None
+
+    def flowerDraw(self, flowPile):
+        tmp = flowPile.copy()
+        for i in self.cards:
+            if type(i) == Flower:
+                self.played.append(i)
+                self.cards.remove(i)
+                self.cards.append(tmp[0])
+                tmp = tmp[1:]
+        # Returns the flower pile
+        return tmp
 
     # Print hand
     def print_hand(self):

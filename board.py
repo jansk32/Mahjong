@@ -10,6 +10,7 @@ class Board:
 
     def __init__(self):
         self.cards = initialise_pieces()
+        self.flowers = []
         self.players = []
         self.discard = []
 
@@ -44,13 +45,22 @@ class Board:
     
     # Initial draws
     def initial_drawing(self):
+
+        # Each round (3 times), players draw 4 cards each
         for round in range(3):
             for i in range(len(self.players)):
                 self.initial_four_player(i)
+        # Last card to draw in 4th round of drawing
         for last in self.players:
             c = self.drawCard()
             last.draw(c)
         
+        
+    # Player flower drawing
+    def playerFlowerDrawing(self):
+        for player in self.players:
+            self.flowers = player.flowerDraw(self.flowers)
+
     # Set order of pos
     def setOrder(self):
         # Assume check who has pos
@@ -62,7 +72,7 @@ class Board:
     
     # Set flower deck
     def flowerDeck(self, dieNum):
-        flowerPile = self.cards[:dieNum].copy
+        flowerPile = self.cards[:dieNum].copy()
         self.cards = self.cards[dieNum:]
         return flowerPile
         
