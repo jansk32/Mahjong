@@ -24,14 +24,14 @@ class Board:
     def initial_four_player(self, ind):
         tmpPlayer = self.players[ind]
         for i in range(4):
-            c = self.drawCard()
-            tmpPlayer.draw(c)
+            #c = self.drawCard()
+            c, self.cards = tmpPlayer.draw(self.cards)
 
 
     # Update players, which return a thrown piece
     def update(self):
-        gvn = self.drawCard()
-        t = self.players[0].update(gvn)
+        #gvn = self.drawCard()
+        t = self.players[0].update(self.cards, self.discard, self.flowerDeck)
         self.discard.append(t)
 
         #for i in self.players:
@@ -52,8 +52,7 @@ class Board:
                 self.initial_four_player(i)
         # Last card to draw in 4th round of drawing
         for last in self.players:
-            c = self.drawCard()
-            last.draw(c)
+            c, self.cards = last.draw(self.cards)
         
         
     # Player flower drawing

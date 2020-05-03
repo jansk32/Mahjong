@@ -27,70 +27,145 @@ class Player:
         self.pos = pos
     
     # Command line
-    def command(self):
-        result = ""
-        while not result.isdigit():
-            cmd_str = input("Trial: ").lower().split()
-            if len(cmd_str) == 1:
-                # arrange, call (zhimo and gong), game
-                if cmd_str[0] in ["arrange", "sort"]:
-                    self.sort_hand()
-                    self.print_hand()
-                ## Need to think of strategy for calling
+    def command(self, drawPile, discardCard, flowerPile):
+        isThrow = False
+        """
+        1. Prompt user of action (during turn)
+            a. Draw (1) v
+                b. Gong (2)
+                c. throw (3) v
+                d. Flower (4)
+            b. Zhi Mo (2)
+            c. arrange(3) v
+        2. Prompt user of action (outside turn)
+            a. Pong (5)
+            b. Gong (6)
+        3. Prompt user of game (7)
+        Each move should return an updated (drawPile, discardCard, flowerPile, thrownInd)
+        """
 
-                # Call gong
-                elif cmd_str[0] == call["gong"] or cmd_str[0] == "gong":
-                    print(self.name, "will GONG!")
+        ## Actions during turn
+        action = int(input("Draw or Zhimo or arrange: "))
+        while isThrow == False:
+            # if action != game or arrange or sort, do the following
+            if action == 1:
+                c, drawPile_updated = self.draw(drawPile)
+                print("You drew", c.toString())
+                self.print_hand()
+                action = int(input("gong, zhimo or throw: "))
+                if action == 2:
+                    # Gong
+                    lst = input("Which cards to Gong? ")
+                    lst = [int(x) for x in lst.split() if x.digit()]
+                    if len(lst) == 4:
+                        isGong = gong(flowerPile)
 
-                    # Select pieces to GONG
-                    arr = input("Select pieces (4): ").split()
-                    arr = [int(x) for x in arr]
-                    checkArr = [self.cards[i] for i in arr]
-                    # Make sure all pieces have same type
-                    if len({g.getTypes().value for g in checkArr}) == 1:
-                        tmpHand = list(self.cards)
-                        # if they are normal cards, vals have to be the same too
-                        try:
-                            if len({n.getVal() for n in checkArr}) == 1:
-                                for playInd in arr:
-                                    c = tmpHand.pop(playInd)
-                                    self.played.append(c)
-                        # if they dont have getVal function 
-                        except:
-                            for playInd in arr:
-                                c = tmpHand.pop(playInd)
-                                self.played.append(c)
-                    result = cmd_str[0]
+                    # if gong is correctly done, draw flower
+                    if isGong == True:
+                        isThrow = True
+                        while type(flowerPile[0]) == Flower:
 
-            elif len(cmd_str) == 2 and cmd_str[1].isdigit() and \
-                "throw" in cmd_str[0]:
-                # throw (ind number)
-                cmd, ind = cmd_str
-                print(self.name, cmd, ind)
-                result = ind
-            else:
-                print("Invalid Move. Try again")
-        return int(result)
+                            # flowerDraw already adds it to the hand
+                            flowerPile = self.flowerDraw(flowerPile)
+
+                        # if no more flowers
+                        flowerPile = self.flowerDraw(flowerPile)
+                        ind = int(input("Throw out which card?" ))
+                        return ind     
+                    
+
+                elif action == 3:
+                    # Throw out a card
+                    isThrow = True
+                    ind = int(input("Which card to throw? "))
+                    return ind
+
+            elif action == 2:
+                # Zhimo
+                self.card.append(discardCard)
+
+                # should have check in place
+
+                zhiMoPiece = input("Which pieces do you want to zhimo? ")
+                zhiMoPiece = zhiMoPiece.split()
+
+                # Assuming pieces are in one line, separated by one space
+                for card in zhiMoPiece:
+                    self.played.append(self.cards.pop(card))
+                return
+            
+            elif action == 8:
+                # Arrange cards
+                self.sort_hand()
+                self.print_hand()
+                action = int(input("Draw or Zhi mo? "))
+
     
     # Draw a card
-    def draw(self, cardAdd):
+    def draw(self, drawPile):
         newCards = list(self.cards)
-        newCards.append(cardAdd)
+        tmp = drawPile.pop(0)
+        newCards.append(tmp)
         self.setCards(newCards)
-    
+        return (tmp, drawPile)
+
+
     # Throw out a card
     def throwOut(self, ind):
         cardThrown = self.cards.pop(ind)
         return cardThrown
     
+    # Check if playable pong/gong
+    def checkGongPong(self, playing):
+        sample = self.cards[playing[0]]
+        for card in playing:
+            tmpCard = self.cards[card]
+
+            # Need to check if all cards are the same type
+            if tmpCard.types != sample.types:
+                return False
+            # Check if cards have same value too where possible
+            try:
+                if tmpCard.val != sample.val:
+                    return False
+            except:
+                continue
+        return True
+
+    # Check if zhimo is playable
+    def checkZhiMo(self, playing):
+        sample = self.cards[playing[0]]
+        correctNumbers = []
+        for card in playing:
+            tmpCard = self.cards[card]
+
+            # Need to check if all cards are the same type
+            if tmpCard.types != sample.types:
+                return False
+            correctNumbers.append(tmpCard.val)
+            
+        # Check if in order
+        if sorted(correctNumbers) == \
+            range(min(correctNumbers), max(correctNumbers) + 1):
+                        return True
+        return False
+
     # To make a call
-    def call():
-        # 1 = pong, 2 = zhimo, 3 = gong
-        calling = input("Type your call (1,2,3): ")
-        if calling.isdigit():
-            return calling
-        else:
-            return None
+    def gong(self,playing, flowerPile):
+        # Takes an array of ind 
+
+        # Selects first card in line as sample
+        if self.checkGongPong(playing) == False:
+            return False
+
+        # Play cards and take from flower pile    
+        for add in playing:
+            self.played.append(self.cards.pop(add))
+
+        self.flowerDraw(flowerPile)  
+        return True
+
+           
 
     def flowerDraw(self, flowPile):
         tmp = flowPile.copy()
@@ -111,21 +186,28 @@ class Player:
     
     # Sorting hand
     def sort_hand(self):
-        newHand = sorted(self.cards, key=lambda x: x.getTypes().value)
-        valCards = [x for x in newHand if x.getTypes().value < 4]
-        valCards = sorted(valCards,key=lambda x : (x.getTypes().value, x.getVal()))
-        newHand = valCards + newHand[len(valCards):]
+        newHand = sortCards(self.cards)
         self.setCards(newHand)
 
 
-
     # Update call should return thrown card
-    def update(self, drawnCard):
-        print(self.name, "picked up", drawnCard.toString())
-        self.draw(drawnCard)
+    def update(self, drawPile,discardPile,flowerPile):
+        # print(self.name, "picked up", drawnCard.toString())
+        # self.draw(drawnCard)
         self.print_hand()
         print(len(self.cards),end="\n")
-        tmpInd = self.command()
+        if len(discardPile) < 1:
+            tmpInd = self.command(drawPile, [], flowerPile)
+        else:    
+            tmpInd = self.command(drawPile, discardPile[0], flowerPile)
         # tmpInd = input("Select a card(index): ")
-        print(self.name, "threw out", self.cards[tmpInd].toString())
+        #print(self.name, "threw out", self.cards[tmpInd].toString())
         return self.throwOut(tmpInd)
+
+# Sorts card algorithm
+def sortCards(tiles):
+    newHand = sorted(tiles, key=lambda x: x.getTypes().value)
+    valCards = [x for x in newHand if x.getTypes().value < 4]
+    valCards = sorted(valCards,key=lambda x : (x.getTypes().value, x.getVal()))
+    newHand = valCards + newHand[len(valCards):]
+    return newHand
